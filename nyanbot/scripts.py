@@ -13,14 +13,21 @@ import urllib2
 import simplejson
 from cStringIO import StringIO
 from PIL import Image
+from os import path
+
+
+COMMANDS_JSON = path.join(path.dirname(__file__),
+    'commands.json')
 
 
 def nyanbot_function(pattern):
     def decorator(function):
-        with open('commands.json', 'r+') as f:
+        with open(COMMANDS_JSON, 'r+') as f:
             commands = json.loads(f.read())
-            commands[pattern] = function
+            commands[pattern] = function.__name__
+            f.seek(0)
             f.write(json.dumps(commands))
+            f.truncate()
         return function
     return decorator
 
@@ -44,8 +51,14 @@ def image_me(image):
     Image.open(s).show()
 
 
+"""
+def register(script):
+    import script
+"""
+
+
 def get_commands():
-    with open('commands.json', 'r') as f:
+    with open(COMMANDS_JSON, 'r') as f:
         commands = json.loads(f.read())
         # Convert all strings into functions
         commands.update((pattern, globals()[command]) 

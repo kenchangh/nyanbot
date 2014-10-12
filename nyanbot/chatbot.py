@@ -19,7 +19,7 @@ from grammar import create_grammars, match_grammars
 
 def raise_invalid_command(command):
     raise Exception(
-        'Command {} is invalid or not registered'.format(command)
+        "Command '{}' is invalid or not registered".format(command)
     )
 
 
