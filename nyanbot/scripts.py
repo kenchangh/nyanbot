@@ -61,6 +61,6 @@ def get_commands():
     with open(COMMANDS_JSON, 'r') as f:
         commands = json.loads(f.read())
         # Convert all strings into functions
-        commands.update((pattern, globals()[command]) 
-            for pattern, command in commands.items())
-        return commands
+    commands.update((pattern, globals()[command]) 
+        for pattern, command in commands.items())
+    return commands

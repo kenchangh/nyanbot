@@ -1,1 +1,1 @@
-{"image/img [me] <image>": "image_me", "ping [me]": "pong"}
+{"pong [me]": "pong", "image/img [me] <image>": "image_me", "ping [me]": "ping"}
