@@ -1,4 +1,4 @@
-sugarcoat
+NyanBot
 =========
 
-Give your templates a new set of clothes.
+Not Yet ANother Bot. Sick of this right?
