@@ -13,7 +13,7 @@ Options:
 """
 
 from docopt import docopt
-from scripts import COMMANDS
+from scripts import get_commands
 from grammar import create_grammars, match_grammars
 
 
@@ -22,6 +22,8 @@ def raise_invalid_command(command):
         'Command {} is invalid or not registered'.format(command)
     )
 
+
+COMMANDS = get_commands()
 
 def run_command(user_command):
     """
@@ -32,13 +34,19 @@ def run_command(user_command):
         # matched could be dictionary or False
         matched = match_grammars(user_command,
             create_grammars(command))
-        if matched:
+        # if matched: might not work, might be {}
+        if matched != False:
             vars_to_values = matched  # clearer naming
             function = COMMANDS[command]
-            variables = vars_to_values.keys()
-            for var in variables:
-                value = vars_to_values[var]
-                function(value)
+            # It's empty, which is {}
+            if vars_to_values:
+                variables = vars_to_values.keys()
+                for var in variables:
+                    value = vars_to_values[var]
+                    function(value)
+            # Just run without parameters
+            else:
+                function()
             valid_command = True
             break
         # command not registered or invalid
@@ -56,5 +64,3 @@ if __name__ == '__main__':
     # ['image', 'me', 'yolo'] => 'image me yolo'
     user_command = ' '.join(user_command)
     run_command(user_command)
-
-    

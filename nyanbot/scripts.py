@@ -7,6 +7,7 @@
     Default scripts for nyanbot.
 """
 
+import json
 import urllib
 import urllib2
 import simplejson
@@ -16,9 +17,16 @@ from PIL import Image
 
 def nyanbot_function(pattern):
     def decorator(function):
-        COMMANDS[pattern] = function
+        with open('commands.json', 'r+') as f:
+            commands = json.loads(f.read())
+            commands[pattern] = function
+            f.write(json.dumps(commands))
         return function
     return decorator
+
+
+def ping():
+    print 'pong'
 
 
 def image_me(image):
@@ -36,6 +44,10 @@ def image_me(image):
     Image.open(s).show()
 
 
-COMMANDS = {
-    'image/img [me] <image>': image_me,
-}
+def get_commands():
+    with open('commands.json', 'r') as f:
+        commands = json.loads(f.read())
+        # Convert all strings into functions
+        commands.update((pattern, globals()[command]) 
+            for pattern, command in commands.items())
+        return commands
