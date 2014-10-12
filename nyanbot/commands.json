@@ -1,1 +1,5 @@
-{"pong [me]": "pong", "image/img [me] <image>": "image_me", "ping [me]": "ping"}
+{
+	"search [me] <url>": "search_me",
+	"image/img [me] <image>": "image_me",
+	"ping [me]": "ping"
+}

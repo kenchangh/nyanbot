@@ -12,8 +12,10 @@ Options:
   -v --version  Show version.
 """
 
+import json
+from os import path
 from docopt import docopt
-from scripts import get_commands
+from scripts import *
 from grammar import create_grammars, match_grammars
 
 
@@ -23,7 +25,33 @@ def raise_invalid_command(command):
     )
 
 
+COMMANDS_JSON = path.join(path.dirname(__file__),
+    'commands.json')
+
+
+def nyanbot_function(pattern):
+    def decorator(function):
+        with open(COMMANDS_JSON, 'r+') as f:
+            commands = json.loads(f.read())
+            commands[pattern] = function.__name__
+            f.seek(0)
+            f.write(json.dumps(commands))
+            f.truncate()
+        return function
+    return decorator
+
+
+def get_commands():
+    with open(COMMANDS_JSON, 'r') as f:
+        commands = json.loads(f.read())
+    # Convert all strings into functions
+    commands.update((pattern, globals()[command]) 
+        for pattern, command in commands.items())
+    return commands
+
+
 COMMANDS = get_commands()
+
 
 def run_command(user_command):
     """
@@ -49,7 +77,7 @@ def run_command(user_command):
                 function()
             valid_command = True
             break
-        # command not registered or invalid
+    # command not registered or invalid
     if not valid_command:
         raise_invalid_command(user_command)
 

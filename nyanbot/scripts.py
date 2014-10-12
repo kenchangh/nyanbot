@@ -7,44 +7,33 @@
     Default scripts for nyanbot.
 """
 
-import json
 import urllib
 import urllib2
 import simplejson
 from cStringIO import StringIO
 from PIL import Image
-from os import path
-
-
-COMMANDS_JSON = path.join(path.dirname(__file__),
-    'commands.json')
-
-
-def nyanbot_function(pattern):
-    def decorator(function):
-        with open(COMMANDS_JSON, 'r+') as f:
-            commands = json.loads(f.read())
-            commands[pattern] = function.__name__
-            f.seek(0)
-            f.write(json.dumps(commands))
-            f.truncate()
-        return function
-    return decorator
 
 
 def ping():
     print 'pong'
 
 
-def image_me(image):
+def search_me(term, search_type='web'):
     fetcher = urllib2.build_opener()
-    print 'Searching for image...'
+    print "Searching for '{}'...".format(term)
+    term = urllib.quote(term)
     search_url = "http://ajax.googleapis.com/ajax/services/search/"\
-                 "images?v=1.0&q=" + image + "&start=0"
+                 + search_type + "?v=1.0&q=" + term + "&start=0"
     response = fetcher.open(search_url)
     _json = simplejson.load(response)
+    url = _json['responseData']['results'][0]['unescapedUrl']
+    if search_type == 'web':
+        print url
+    return url
 
-    image_url = _json['responseData']['results'][0]['unescapedUrl']
+
+def image_me(image_name):
+    image_url = search_me(image_name, search_type='images')
     print 'Loading image...'
     # Make into stream buffer to trick Image.open
     s = StringIO(urllib.urlopen(image_url).read())
@@ -55,12 +44,3 @@ def image_me(image):
 def register(script):
     import script
 """
-
-
-def get_commands():
-    with open(COMMANDS_JSON, 'r') as f:
-        commands = json.loads(f.read())
-        # Convert all strings into functions
-    commands.update((pattern, globals()[command]) 
-        for pattern, command in commands.items())
-    return commands
