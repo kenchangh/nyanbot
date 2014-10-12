@@ -1,5 +1,8 @@
 {
 	"search [me] <url>": "search_me",
 	"image/img [me] <image>": "image_me",
-	"ping [me]": "ping"
+	"ping [me]": "ping",
+	"what are/is the three/3 rules/laws[?]": "rules",
+	"help [me/us]": "help_",
+	"echo <message>": "echo"
 }

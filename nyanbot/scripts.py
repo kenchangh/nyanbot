@@ -5,6 +5,12 @@
     ~~~~~~~~~~~~~~~
 
     Default scripts for nyanbot.
+
+    NOTE:
+        Never use underscore in front of command names.
+        It just fucks things up somehow.
+        No:  _help
+        Yes: help_
 """
 
 import urllib
@@ -39,6 +45,22 @@ def image_me(image_name):
     s = StringIO(urllib.urlopen(image_url).read())
     Image.open(s).show()
 
+
+def rules():
+    rules = [
+      "1. A robot may not injure a human being or, through inaction, allow a human being to come to harm.",
+      "2. A robot must obey any orders given to it by human beings, except where such orders would conflict with the First Law.",
+      "3. A robot must protect its own existence as long as such protection does not conflict with the First or Second Law."
+    ]
+    print '\n'.join(rules)
+
+
+def echo(message):
+    print message
+
+
+def help_():
+    print 'yo'
 
 """
 def register(script):
